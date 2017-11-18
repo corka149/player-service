@@ -21,10 +21,10 @@ pub fn handler(req: &mut Request) -> IronResult<Response> {
     }
 }
 
-fn extract_id(possible_id: Option<&str>) -> Option<usize> {
+fn extract_id(possible_id: Option<&str>) -> Option<i32> {
     match possible_id {
         Some(val) => {
-            match val.parse::<usize>() {
+            match val.parse::<i32>() {
                 Ok(id) => Some(id),
                 Err(parse_err) => {
                     eprintln!("Tried to parse {} but got error {}", val, parse_err);
@@ -36,7 +36,7 @@ fn extract_id(possible_id: Option<&str>) -> Option<usize> {
     }
 }
 
-fn extract_player_str(id: usize) -> String {
+fn extract_player_str(id: i32) -> String {
     match service::get_player_by_id(id) {
         Some(player) => parse_player(&player),
         None => String::from(""),

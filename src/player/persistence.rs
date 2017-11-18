@@ -1,24 +1,23 @@
-use std::collections::HashMap;
 use super::model::Player;
-use super::Gender;
+use diesel::prelude::*;
 
-pub fn get_player_by_id(id: usize) -> Option<Player> {
-    let src = set_up();
-    match src.get(&id) {
-        Some(player) => Some(player.clone()),
-        None => None,
+// Database
+use super::super::database::*;
+
+pub fn get_player_by_id(player_id: i32) -> Option<Player> {
+    use super::super::schema::players::dsl::*;
+
+    let mut result: Option<Player> = None;
+    let connection = establish_connection();
+
+    let results = players
+        .filter(id.eq(player_id))
+        .limit(1)
+        .load::<Player>(&connection)
+        .expect("Error loading player");
+
+    for player in results {
+        result = Some(player);
     }
-}
-
-fn set_up() -> HashMap<usize, Player> {
-    let player_a = Player::new(1, String::from("Bastian"), Gender::Male, 27);
-    let player_b = Player::new(2, String::from("Maria"), Gender::Female, 26);
-    let player_c = Player::new(3, String::from("Corina"), Gender::Female, 25);
-    let mut source = HashMap::new();
-
-    source.insert(1, player_a);
-    source.insert(2, player_b);
-    source.insert(3, player_c);
-
-    source
+    result
 }

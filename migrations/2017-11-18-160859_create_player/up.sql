@@ -1,0 +1,6 @@
+CREATE TABLE players (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR NOT NULL,
+    gender VARCHAR NOT NULL,
+    age INTEGER NOT NULL
+)
